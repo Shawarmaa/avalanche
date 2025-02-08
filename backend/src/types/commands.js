@@ -2,8 +2,16 @@
 
 // Valid tokens that can be traded
 export const TOKENS = {
-    // Native and Stables
+    // Native and Major Layer 1s
     AVAX: 'AVAX',
+    wBTC: 'wBTC',
+    wETH: 'wETH',
+    BNB: 'BNB',
+    FTM: 'FTM',
+    MATIC: 'MATIC',  // Polygon's token
+    SOL: 'SOL',
+    
+    // Stablecoins
     USDC: 'USDC',
     USDT: 'USDT',
     USDC_e: 'USDC.e',
@@ -11,25 +19,27 @@ export const TOKENS = {
     FRAX: 'FRAX',
     MIM: 'MIM',
 
-    // Major DeFi
-    JOE: 'JOE',
+    // DeFi Blue Chips
     LINK: 'LINK',
-    wBTC: 'wBTC',
-    wETH: 'wETH',
-    sAVAX: 'sAVAX',
+    AAVE: 'AAVE',
+    UNI: 'UNI',
+    QNT: 'QNT',
     
-    // Liquid Staking
+    // Liquid Staking & Wrapped
+    sAVAX: 'sAVAX',
     yyAVAX: 'yyAVAX',
     WAVAX: 'WAVAX',
     BTC_b: 'BTC.b',
     ETH_b: 'ETH.b',
 
-    // GameFi & Others
-    GALA: 'GALA',
+    // Additional Tokens
     GMX: 'GMX',
-    SPELL: 'SPELL',
-    TIME: 'TIME',
-    XAVA: 'XAVA'
+    JOE: 'JOE',
+    PEPE: 'PEPE',
+    SHIB: 'SHIB',
+    ARB: 'ARB',    // Arbitrum
+    FET: 'FET',    // Fetch.ai
+    RUNE: 'RUNE'   // THORChain
 };
 
 // Command type definition for swaps

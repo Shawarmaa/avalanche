@@ -1,9 +1,9 @@
-import { ComboboxForm } from "@/components/input-crypto";
+import { OptionTab } from "@/components/option-tabs";
 
 export default function Home() {
   return (
     <div>
-      <ComboboxForm></ComboboxForm>
+      <OptionTab></OptionTab>
     </div>
   );
 }

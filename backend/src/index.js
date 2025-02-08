@@ -1,7 +1,11 @@
 // src/index.js
 import express from 'express';
+import dotenv from 'dotenv';
 import { processCommand } from './ai/deepseek.js';
 import { executeYieldYakTrade } from './protocols/yieldyak.js';
+
+// Load environment variables
+dotenv.config();
 
 const app = express();
 app.use(express.json());
@@ -10,19 +14,28 @@ app.post('/api/execute', async (req, res) => {
     try {
         const { userPrompt } = req.body;
         
-        // 1. Process the command through Deepseek
-        const parsedCommand = await processCommand(userPrompt);
+        if (!userPrompt) {
+            return res.status(400).json({
+                success: false,
+                error: 'userPrompt is required'
+            });
+        }
+
+        // 1. Process through Deepseek
+        const command = await processCommand(userPrompt);
         
-        // 2. Execute the trade based on parsed command
-        const result = await executeYieldYakTrade(parsedCommand);
+        // 2. Execute the command (this will be handled by the user's wallet)
+        const executionData = await executeYieldYakTrade(command);
         
-        res.json({ 
+        res.json({
             success: true,
-            result,
-            originalCommand: userPrompt,
-            parsedCommand
+            command,
+            executionData,
+            originalPrompt: userPrompt
         });
+
     } catch (error) {
+        console.error('Error:', error);
         res.status(500).json({
             success: false,
             error: error.message

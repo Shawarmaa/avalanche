@@ -35,7 +35,54 @@ const Chart: React.FC<ChartProps> = ({ inputToken, targetToken, amount }) => {
     BTC: "bitcoin",
     ETH: "ethereum",
     XRP: "ripple",
-    // Add other token mappings as needed
+    FLR: "flare-networks",
+    SGB: "songbird",
+    LTC: "litecoin",
+    XLM: "stellar",
+    DOGE: "dogecoin",
+    ADA: "cardano",
+    ALGO: "algorand",
+    FIL: "filecoin",
+    ARB: "arbitrum",
+    AVAX: "avalanche",
+    BNB: "binancecoin",
+    POL: "polygon", // Assuming POL is Polygon, confirm this
+    SOL: "solana",
+    USDC: "usd-coin",
+    USDT: "tether",
+    XDC: "xdce-crowd-sale",
+    TRX: "tron",
+    LINK: "chainlink",
+    ATOM: "cosmos",
+    DOT: "polkadot",
+    TON: "toncoin",
+    ICP: "internet-computer",
+    SHIB: "shiba-inu",
+    DAI: "dai",
+    BCH: "bitcoin-cash",
+    NEAR: "near-protocol",
+    LEO: "leo-token",
+    UNI: "uniswap",
+    ETC: "ethereum-classic",
+    WIF: "unknown-token", // Placeholder
+    BONK: "bonk", // Confirm this token mapping
+    JUP: "jupiter",
+    ETHFI: "ethereum-finance", // Placeholder
+    ENA: "enablers", // Placeholder
+    PYTH: "pyth-network", // Confirm this token mapping
+    HNT: "helium",
+    SUI: "sui", // Confirm this token mapping
+    PEPE: "pepe", // Confirm this token mapping
+    QNT: "quant-network",
+    AAVE: "aave",
+    FTM: "fantom",
+    ONDO: "ondo-finance", // Placeholder
+    TAO: "lamden", // Placeholder
+    FET: "fetch-ai",
+    RENDER: "render-token",
+    NOT: "unknown-token", // Placeholder
+    RUNE: "thorchain",
+    TRUMP: "donald-trump-token" // Placeholder, confirm
   };
 
   const fetchChartData = async (inputToken: string, targetToken: string, amount: string) => {

@@ -19,31 +19,51 @@ import {
   const CHAIN_ID = ChainId.AVALANCHE;
   const router = LB_ROUTER_V22_ADDRESS[CHAIN_ID];
   
-  // Initialize common tokens
-  const WAVAX = WNATIVE[CHAIN_ID];
-  const USDC = new Token(
-    CHAIN_ID,
-    "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E",
-    6,
-    "USDC",
-    "USD Coin"
-  );
-  const USDT = new Token(
-    CHAIN_ID,
-    "0x9702230A8Ea53601f5cD2dc00fDBc13d4dF4A8c7",
-    6,
-    "USDT",
-    "Tether USD"
-  );
+  // Initialize tokens
+  const TOKENS_CONFIG = {
+      // Native and Stables
+      WAVAX: WNATIVE[CHAIN_ID],
+      USDC: new Token(CHAIN_ID, "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E", 6, "USDC", "USD Coin"),
+      USDT: new Token(CHAIN_ID, "0x9702230A8Ea53601f5cD2dc00fDBc13d4dF4A8c7", 6, "USDT", "Tether USD"),
+      'USDC.e': new Token(CHAIN_ID, "0xA7D7079b0FEaD91F3e65f86E8915Cb59c1a4C664", 6, "USDC.e", "USD Coin.e"),
+      DAI: new Token(CHAIN_ID, "0xd586E7F844cEa2F87f50152665BCbc2C279D8d70", 18, "DAI", "Dai Stablecoin"),
+      FRAX: new Token(CHAIN_ID, "0xD24C2Ad096400B6FBcd2ad8B24E7acBc21A1da64", 18, "FRAX", "Frax"),
+      MIM: new Token(CHAIN_ID, "0x130966628846BFd36ff31a822705796e8cb8C18D", 18, "MIM", "Magic Internet Money"),
   
-  // Base tokens used for routing
-  const BASES = [WAVAX, USDC, USDT];
+      // Major DeFi
+      JOE: new Token(CHAIN_ID, "0x6e84a6216eA6dACC71eE8E6b0a5B7322EEbC0fDd", 18, "JOE", "JoeToken"),
+      LINK: new Token(CHAIN_ID, "0x5947BB275c521040051D82396192181b413227A3", 18, "LINK", "ChainLink Token"),
+      wBTC: new Token(CHAIN_ID, "0x50b7545627a5162F82A992c33b87aDc75187B218", 8, "wBTC", "Wrapped Bitcoin"),
+      wETH: new Token(CHAIN_ID, "0x49D5c2BdFfac6CE2BFdB6640F4F80f226bc10bAB", 18, "wETH", "Wrapped Ether"),
+      sAVAX: new Token(CHAIN_ID, "0x2b2C81e08f1Af8835a78Bb2A90AE924ACE0eA4bE", 18, "sAVAX", "Staked AVAX"),
+  
+      // Liquid Staking
+      yyAVAX: new Token(CHAIN_ID, "0x59414b3089ce2AF0010e7523Dea7E2b35d776ec7", 18, "yyAVAX", "Yield Yak AVAX"),
+      'BTC.b': new Token(CHAIN_ID, "0x152b9d0FdC40C096757F570A51E494bd4b943E50", 8, "BTC.b", "Bitcoin bridged"),
+      'ETH.b': new Token(CHAIN_ID, "0x49D5c2BdFfac6CE2BFdB6640F4F80f226bc10bAB", 18, "ETH.b", "Ethereum bridged"),
+  
+      // GameFi & Others
+      GALA: new Token(CHAIN_ID, "0x63B23D5eC35Bab6550B166FE3567e9D7eDD3d3a6", 8, "GALA", "Gala"),
+      GMX: new Token(CHAIN_ID, "0x62edc0692BD897D2295872a9FFCac5425011c661", 18, "GMX", "GMX"),
+      SPELL: new Token(CHAIN_ID, "0xCE1bFFBD5374Dac86a2893119683F4911a2F7814", 18, "SPELL", "Spell Token"),
+      TIME: new Token(CHAIN_ID, "0xb54f16fB19478766A268F172C9480f8da1a7c9C3", 9, "TIME", "Time"),
+      XAVA: new Token(CHAIN_ID, "0xd1c3f94DE7e5B45fa4eDBBA472491a9f4B166FC4", 18, "XAVA", "Avalaunch")
+  };
+  
+  // Base tokens used for routing (most liquid pairs)
+  const BASES = [
+      TOKENS_CONFIG.WAVAX,
+      TOKENS_CONFIG.USDC,
+      TOKENS_CONFIG.USDT,
+      TOKENS_CONFIG['USDC.e'],
+      TOKENS_CONFIG.wETH,
+      TOKENS_CONFIG.wBTC
+  ];
   
   // Token mapping for easy lookup
   const TOKENS: { [key: string]: Token } = {
-    'AVAX': WAVAX,
-    'USDC': USDC,
-    'USDT': USDT
+      ...TOKENS_CONFIG,
+      'AVAX': TOKENS_CONFIG.WAVAX  // Special case for native AVAX
   };
   
   interface SwapParams {

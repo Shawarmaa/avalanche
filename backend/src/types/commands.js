@@ -2,9 +2,34 @@
 
 // Valid tokens that can be traded
 export const TOKENS = {
+    // Native and Stables
     AVAX: 'AVAX',
     USDC: 'USDC',
-    USDT: 'USDT'
+    USDT: 'USDT',
+    USDC_e: 'USDC.e',
+    DAI: 'DAI',
+    FRAX: 'FRAX',
+    MIM: 'MIM',
+
+    // Major DeFi
+    JOE: 'JOE',
+    LINK: 'LINK',
+    wBTC: 'wBTC',
+    wETH: 'wETH',
+    sAVAX: 'sAVAX',
+    
+    // Liquid Staking
+    yyAVAX: 'yyAVAX',
+    WAVAX: 'WAVAX',
+    BTC_b: 'BTC.b',
+    ETH_b: 'ETH.b',
+
+    // GameFi & Others
+    GALA: 'GALA',
+    GMX: 'GMX',
+    SPELL: 'SPELL',
+    TIME: 'TIME',
+    XAVA: 'XAVA'
 };
 
 // Command type definition for swaps

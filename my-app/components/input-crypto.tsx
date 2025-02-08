@@ -28,6 +28,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
+import Chart from "./chart"
+
 
 const tokens = [
   { label: "FLR", value: "FLR" },
@@ -84,13 +86,67 @@ const tokens = [
 ] as const;
 
 const source = [
-    { label: "Avalanche", value: "AVAX" },
-    { label: "ETH", value: "ETH" },
-    { label: "Polygon", value: "POL" },
-    { label: "Solana", value: "SOL" },
-    { label: "Arbitrum", value: "ARB" },
-    { label: "Optimism", value: "OP" },
-  ] as const;
+  { label: "FLR", value: "FLR" },
+  { label: "SGB", value: "SGB" },
+  { label: "BTC", value: "BTC" },
+  { label: "XRP", value: "XRP" },
+  { label: "LTC", value: "LTC" },
+  { label: "XLM", value: "XLM" },
+  { label: "DOGE", value: "DOGE" },
+  { label: "ADA", value: "ADA" },
+  { label: "ALGO", value: "ALGO" },
+  { label: "ETH", value: "ETH" },
+  { label: "FIL", value: "FIL" },
+  { label: "ARB", value: "ARB" },
+  { label: "AVAX", value: "AVAX" },
+  { label: "BNB", value: "BNB" },
+  { label: "POL", value: "POL" },
+  { label: "SOL", value: "SOL" },
+  { label: "USDC", value: "USDC" },
+  { label: "USDT", value: "USDT" },
+  { label: "XDC", value: "XDC" },
+  { label: "TRX", value: "TRX" },
+  { label: "LINK", value: "LINK" },
+  { label: "ATOM", value: "ATOM" },
+  { label: "DOT", value: "DOT" },
+  { label: "TON", value: "TON" },
+  { label: "ICP", value: "ICP" },
+  { label: "SHIB", value: "SHIB" },
+  { label: "DAI", value: "DAI" },
+  { label: "BCH", value: "BCH" },
+  { label: "NEAR", value: "NEAR" },
+  { label: "LEO", value: "LEO" },
+  { label: "UNI", value: "UNI" },
+  { label: "ETC", value: "ETC" },
+  { label: "WIF", value: "WIF" },
+  { label: "BONK", value: "BONK" },
+  { label: "JUP", value: "JUP" },
+  { label: "ETHFI", value: "ETHFI" },
+  { label: "ENA", value: "ENA" },
+  { label: "PYTH", value: "PYTH" },
+  { label: "HNT", value: "HNT" },
+  { label: "SUI", value: "SUI" },
+  { label: "PEPE", value: "PEPE" },
+  { label: "QNT", value: "QNT" },
+  { label: "AAVE", value: "AAVE" },
+  { label: "FTM", value: "FTM" },
+  { label: "ONDO", value: "ONDO" },
+  { label: "TAO", value: "TAO" },
+  { label: "FET", value: "FET" },
+  { label: "RENDER", value: "RENDER" },
+  { label: "NOT", value: "NOT" },
+  { label: "RUNE", value: "RUNE" },
+  { label: "TRUMP", value: "TRUMP" }
+] as const;
+
+// const source = [
+//     { label: "Avalanche", value: "AVAX" },
+//     { label: "ETH", value: "ETH" },
+//     { label: "Polygon", value: "POL" },
+//     { label: "Solana", value: "SOL" },
+//     { label: "Arbitrum", value: "ARB" },
+//     { label: "Optimism", value: "OP" },
+//   ] as const;
 
 
 const FormSchema = z.object({
@@ -112,17 +168,28 @@ export function ComboboxForm() {
     
   })
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    
-    console.log(data)
-  }
 
+  const onSubmit = (data: z.infer<typeof FormSchema>) => {
+    console.log("Form data:", data);
+    setSubmittedData(data); // Store submitted form data
+  };
+
+  const [submittedData, setSubmittedData] = React.useState<z.infer<typeof FormSchema> | null>(null);
   const [inputOpen, setInputOpen] = React.useState(false)
   const [outputOpen, setOutputOpen] = React.useState(false)
   const [token, setToken] = React.useState(false)
 
   return (
     <div>
+
+        {submittedData && (
+                <Chart
+                inputToken={submittedData.targetToken}
+                targetToken={submittedData.outputToken}
+                amount={String(submittedData.amount)}
+                />
+            )}
+
         <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField
@@ -343,7 +410,6 @@ export function ComboboxForm() {
             )}
             />
 
-            
             <Button type="submit" className="w-full">Submit</Button>
         </form>
         </Form>

@@ -1,4 +1,4 @@
-// src/ai/deepseek.js
+// src/ai/groq.js
 import fetch from 'node-fetch';
 import { parseDeepseekResponse } from '../types/commands.js';
 
@@ -16,15 +16,15 @@ Example valid outputs:
 {"action":"harvest"}`;
 
 export async function processCommand(userPrompt) {
-    if (!process.env.DEEPSEEK_API_KEY) {
-        throw new Error('DEEPSEEK_API_KEY not configured');
+    if (!process.env.GROQ_API_KEY) {
+        throw new Error('GROQ_API_KEY not configured');
     }
 
     try {
-        const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
+        const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${process.env.DEEPSEEK_API_KEY}`,
+                'Authorization': `Bearer ${process.env.GROQ_API_KEY}`,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
@@ -32,20 +32,23 @@ export async function processCommand(userPrompt) {
                     { role: 'system', content: SYSTEM_PROMPT },
                     { role: 'user', content: userPrompt }
                 ],
-                model: 'deepseek-chat',
+                model: 'mixtral-8x7b-32768',
+                temperature: 0.1,
                 response_format: { type: "json_object" }
             })
         });
 
         if (!response.ok) {
-            throw new Error(`Deepseek API error: ${response.status}`);
+            const errorText = await response.text();
+            console.error('Full error response:', errorText);
+            throw new Error(`Groq API error: ${response.status}`);
         }
 
         const data = await response.json();
         const aiResponse = data.choices?.[0]?.message?.content;
 
         if (!aiResponse) {
-            throw new Error('Invalid response from Deepseek');
+            throw new Error('Invalid response from Groq');
         }
 
         // Convert AI response to structured command

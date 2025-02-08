@@ -1,7 +1,7 @@
 // src/index.js
 import express from 'express';
 import dotenv from 'dotenv';
-import { processCommand } from './ai/deepseek.js';
+import { processCommand } from './ai/groq.js';
 import { executeYieldYakTrade } from './protocols/yieldyak.js';
 
 // Load environment variables

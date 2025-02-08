@@ -11,30 +11,31 @@ const CONTRACTS = {
     YIELDYAK_VAULT: "0xaAc0F2d0630d1D09ab2B5A400412a4840B866d95", // YieldYak vault address
 };
 
-export async function executeYieldYakTrade(parsedCommand, userAddress) {
-    // This should be injected by the frontend
-    if (!window.ethereum) {
-        throw new Error('No Web3 provider found. Please install MetaMask.');
+export async function executeYieldYakTrade(parsedCommand) {
+    if (!process.env.AVALANCHE_RPC) {
+        throw new Error('AVALANCHE_RPC not configured');
     }
 
-    // Get provider from user's Web3 wallet
-    const provider = new ethers.BrowserProvider(window.ethereum);
+    // Create provider using RPC URL
+    const provider = new ethers.JsonRpcProvider(process.env.AVALANCHE_RPC);
     
-    // Request account access if needed
-    await window.ethereum.request({ method: 'eth_requestAccounts' });
-    
-    // Get signer from user's wallet
-    const signer = await provider.getSigner();
-    
-    // Verify the signer address matches the provided address
-    if (await signer.getAddress() !== userAddress) {
-        throw new Error('Signer address does not match provided address');
-    }
+    // For testing/simulation purposes, we'll just return the formatted command
+    // In production, you'd need to handle private keys securely and sign transactions
+    return {
+        status: 'simulated',
+        command: parsedCommand,
+        contractAddress: CONTRACTS.YIELDYAK_VAULT,
+        network: 'avalanche',
+        rpcUrl: process.env.AVALANCHE_RPC
+    };
 
+    /* 
+    // Production implementation would look something like this:
+    const wallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
     const contract = new ethers.Contract(
         CONTRACTS.YIELDYAK_VAULT,
         YIELDYAK_ABI,
-        signer
+        wallet
     );
 
     try {
@@ -73,4 +74,5 @@ export async function executeYieldYakTrade(parsedCommand, userAddress) {
     } catch (error) {
         throw new Error(`Failed to execute YieldYak trade: ${error.message}`);
     }
+    */
 }

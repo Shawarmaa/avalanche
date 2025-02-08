@@ -342,9 +342,11 @@ export function ComboboxForm() {
                     placeholder="Enter amount"
                     className={cn(
                         "block w-full rounded-md border bg-white px-4 py-2 text-left shadow-sm focus:border-black focus:ring focus:ring-black/20 sm:text-sm",
-                        !field.value && "text-muted-foreground"
+                        field.value === 0 && "text-muted-foreground" // Add conditional class for placeholder styling
                     )}
                     {...field}
+                    value={field.value === 0 ? "" : field.value} // Show empty string instead of 0
+                    onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : 0)} // Convert back to 0 when empty
                     min={0}
                     step={0.01}
                     />

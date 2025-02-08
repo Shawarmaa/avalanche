@@ -2,21 +2,33 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import axios from "axios";
+//import { processCommand } from "../src/ai/groq";
+
+
+type DeFiCommand = {
+  action: string;
+  token: string;
+  amount: number;
+  slippage?: number;
+};
 
 export function TextareaWithButton() {
   const [message, setMessage] = useState(""); // Store input text
-  const [response, setResponse] = useState(""); // Store AI response
-
+  const [response, setResponse] = useState<DeFiCommand | null>(null); // Store AI response
+  const [error, setError] = useState<string | null>(null); // Store error message
   const sendMessage = async () => {
     if (!message.trim()) return; // Prevent empty messages
 
     try {
-      const res = await axios.post("http://localhost:3000/api/chat", { message });
-      setResponse(JSON.stringify(res.data.reply, null, 2)); // Format AI response
+      console.log("Sending message:", message);
+
+      const res = await axios.post("http://localhost:3001/api/chat", { message });
+      setResponse(res.data.reply); // Set AI response
     } catch (error) {
       console.error("Error sending message:", error);
-      setResponse("Error processing request.");
+      setError("Error processing request.");
     }
+    console.log("Message sent successfully.");
 
     setMessage(""); // Clear input field after sending
   };
@@ -34,7 +46,14 @@ export function TextareaWithButton() {
       {response && (
         <div className="p-3 mt-2 border rounded bg-gray-100">
           <strong>AI Response:</strong>
-          <pre className="text-sm">{response}</pre>
+          <pre className="text-sm">{JSON.stringify(response, null, 2)}</pre>
+        </div>
+      )}
+
+      {error && (
+        <div className="p-3 mt-2 border rounded bg-red-100">
+          <strong>Error:</strong>
+          <p className="text-sm">{error}</p>
         </div>
       )}
     </div>

@@ -1,20 +1,19 @@
 // src/ai/groq.js
 import fetch from 'node-fetch';
+import { parseDeepseekResponse } from '../types/commands.js';
 
-const SYSTEM_PROMPT = `You are a DeFi command parser for TraderJoe on Avalanche.
-Convert natural language commands into structured swap operations.
-Available tokens: AVAX, USDC, USDT
-
+const SYSTEM_PROMPT = `You are a DeFi command parser for YieldYak on Avalanche. 
+Convert natural language commands into structured operations.
 Output must be a JSON object with:
-- tokenIn: input token symbol (one of: AVAX, USDC, USDT)
-- tokenOut: output token symbol (one of: AVAX, USDC, USDT)
-- amount: amount as string (e.g. "1.5" or "100")
-- slippage: slippage tolerance in decimal (e.g. 0.005 for 0.5%)
+- action: "deposit" | "withdraw" | "harvest"
+- token: token symbol (e.g., "AVAX")
+- amount: numeric amount
+- slippage: optional slippage tolerance in percent
 
 Example valid outputs:
-{"tokenIn":"AVAX","tokenOut":"USDC","amount":"1.5","slippage":0.005}
-{"tokenIn":"USDC","tokenOut":"AVAX","amount":"100","slippage":0.01}
-{"tokenIn":"USDC","tokenOut":"USDT","amount":"50","slippage":0.005}`;
+{"action":"deposit","token":"AVAX","amount":1.5,"slippage":0.5}
+{"action":"withdraw","token":"USDC","amount":100}
+{"action":"harvest"}`;
 
 export async function processCommand(userPrompt) {
     if (!process.env.GROQ_API_KEY) {
@@ -52,27 +51,8 @@ export async function processCommand(userPrompt) {
             throw new Error('Invalid response from Groq');
         }
 
-        // Parse and validate the response
-        const parsed = JSON.parse(aiResponse);
-        
-        // Validate tokens
-        const validTokens = ['AVAX', 'USDC', 'USDT'];
-        if (!validTokens.includes(parsed.tokenIn) || !validTokens.includes(parsed.tokenOut)) {
-            throw new Error('Invalid token symbols in AI response');
-        }
-
-        // Validate amount is a valid number string
-        if (isNaN(parseFloat(parsed.amount))) {
-            throw new Error('Invalid amount in AI response');
-        }
-
-        // Validate slippage is a number between 0 and 1
-        if (typeof parsed.slippage !== 'number' || parsed.slippage <= 0 || parsed.slippage >= 1) {
-            throw new Error('Invalid slippage in AI response');
-        }
-
-        return parsed;
-
+        // Convert AI response to structured command
+        return parseDeepseekResponse(aiResponse);
     } catch (error) {
         throw new Error(`Failed to process command: ${error.message}`);
     }

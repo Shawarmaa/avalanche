@@ -1,7 +1,0 @@
-{
-  "dependencies": {
-    "@traderjoe-xyz/sdk-core": "^2.0.7",
-    "@traderjoe-xyz/sdk-v2": "^3.0.21",
-    "viem": "^2.22.23"
-  }
-}

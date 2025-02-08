@@ -1,19 +1,21 @@
 // src/ai/groq.js
 import fetch from 'node-fetch';
-import { parseDeepseekResponse } from '../types/commands.js';
+import { parseGroqResponse } from '../types/commands.js';
 
-const SYSTEM_PROMPT = `You are a DeFi command parser for YieldYak on Avalanche. 
-Convert natural language commands into structured operations.
+const SYSTEM_PROMPT = `You are a DeFi command parser for TraderJoe on Avalanche.
+Convert natural language commands into structured swap operations.
+Available tokens: AVAX, USDC, USDT
+
 Output must be a JSON object with:
-- action: "deposit" | "withdraw" | "harvest"
-- token: token symbol (e.g., "AVAX")
-- amount: numeric amount
-- slippage: optional slippage tolerance in percent
+- tokenIn: input token symbol (one of: AVAX, USDC, USDT)
+- tokenOut: output token symbol (one of: AVAX, USDC, USDT)
+- amount: amount as string (e.g. "1.5" or "100")
+- slippage: slippage tolerance in decimal (e.g. 0.005 for 0.5%)
 
 Example valid outputs:
-{"action":"deposit","token":"AVAX","amount":1.5,"slippage":0.5}
-{"action":"withdraw","token":"USDC","amount":100}
-{"action":"harvest"}`;
+{"tokenIn":"AVAX","tokenOut":"USDC","amount":"1.5","slippage":0.005}
+{"tokenIn":"USDC","tokenOut":"AVAX","amount":"100","slippage":0.01}
+{"tokenIn":"USDC","tokenOut":"USDT","amount":"50","slippage":0.005}`;
 
 export async function processCommand(userPrompt) {
     if (!process.env.GROQ_API_KEY) {
@@ -52,7 +54,7 @@ export async function processCommand(userPrompt) {
         }
 
         // Convert AI response to structured command
-        return parseDeepseekResponse(aiResponse);
+        return parseGroqResponse(aiResponse);
     } catch (error) {
         throw new Error(`Failed to process command: ${error.message}`);
     }

@@ -1,51 +1,64 @@
 // src/types/commands.js
 
-// Valid actions that can be performed
-export const ACTIONS = {
-    DEPOSIT: 'deposit',
-    WITHDRAW: 'withdraw',
-    HARVEST: 'harvest'
+// Valid tokens that can be traded
+export const TOKENS = {
+    AVAX: 'AVAX',
+    USDC: 'USDC',
+    USDT: 'USDT'
 };
 
-// Command type definition
-export class DeFiCommand {
-    constructor(action, token, amount, slippage = 0.5) {
-        this.action = action;
-        this.token = token;
+// Command type definition for swaps
+export class SwapCommand {
+    constructor(tokenIn, tokenOut, amount, slippage = 0.005) {
+        this.tokenIn = tokenIn;
+        this.tokenOut = tokenOut;
         this.amount = amount;
         this.slippage = slippage;
     }
 
     validate() {
-        if (!Object.values(ACTIONS).includes(this.action)) {
-            throw new Error(`Invalid action: ${this.action}`);
-        }
-        
-        if (!this.token) {
-            throw new Error('Token is required');
+        if (!Object.values(TOKENS).includes(this.tokenIn)) {
+            throw new Error(`Invalid input token: ${this.tokenIn}`);
         }
 
-        if (typeof this.amount !== 'number' || this.amount <= 0) {
-            throw new Error('Amount must be a positive number');
+        if (!Object.values(TOKENS).includes(this.tokenOut)) {
+            throw new Error(`Invalid output token: ${this.tokenOut}`);
         }
 
-        if (typeof this.slippage !== 'number' || this.slippage < 0) {
-            throw new Error('Slippage must be a non-negative number');
+        if (this.tokenIn === this.tokenOut) {
+            throw new Error('Input and output tokens must be different');
+        }
+
+        // Amount should be a string for exact decimal handling
+        if (typeof this.amount !== 'string' || !this.amount.match(/^\d*\.?\d+$/)) {
+            throw new Error('Amount must be a valid number string');
+        }
+
+        // Slippage should be a decimal between 0 and 1
+        if (typeof this.slippage !== 'number' || this.slippage <= 0 || this.slippage >= 1) {
+            throw new Error('Slippage must be a decimal between 0 and 1');
         }
     }
 }
 
-// Parser to convert Deepseek response to DeFiCommand
-export function parseDeepseekResponse(response) {
+// Parser to convert Groq response to SwapCommand
+export function parseGroqResponse(response) {
     try {
         const parsed = JSON.parse(response);
-        return new DeFiCommand(
-            parsed.action,
-            parsed.token,
-            Number(parsed.amount),
-            parsed.slippage || 0.5
+        
+        // Convert to proper types
+        const command = new SwapCommand(
+            parsed.tokenIn,
+            parsed.tokenOut,
+            parsed.amount.toString(), // Ensure amount is string
+            Number(parsed.slippage)
         );
+
+        // Validate the command
+        command.validate();
+        
+        return command;
     } catch (error) {
-        throw new Error(`Failed to parse Deepseek response: ${error.message}`);
+        throw new Error(`Failed to parse Groq response: ${error.message}`);
     }
 }

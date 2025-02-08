@@ -6,8 +6,12 @@ import axios from "axios";
 
 
 type DeFiCommand = {
-  action: string;
-  token: string;
+  // action: string;
+  // token: string;
+  // amount: number;
+  // slippage?: number;
+  tokenIn: string;
+  tokenOut: string;
   amount: number;
   slippage?: number;
 };

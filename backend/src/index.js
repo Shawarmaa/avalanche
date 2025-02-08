@@ -2,15 +2,13 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import { processCommand } from './ai/groq.js';
-import { executeYieldYakTrade } from './protocols/yieldyak.js';
 
-// Load environment variables
 dotenv.config();
 
 const app = express();
 app.use(express.json());
 
-app.post('/api/execute', async (req, res) => {
+app.post('/api/parse', async (req, res) => {
     try {
         const { userPrompt } = req.body;
         
@@ -21,16 +19,13 @@ app.post('/api/execute', async (req, res) => {
             });
         }
 
-        // 1. Process through Deepseek
+        // Process through Groq
         const command = await processCommand(userPrompt);
         
-        // 2. Execute the command (this will be handled by the user's wallet)
-        const executionData = await executeYieldYakTrade(command);
-        
+        // Return the parsed command for frontend to handle
         res.json({
             success: true,
             command,
-            executionData,
             originalPrompt: userPrompt
         });
 

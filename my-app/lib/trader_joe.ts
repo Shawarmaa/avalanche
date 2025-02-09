@@ -82,130 +82,102 @@ import {
     amount: string;
     slippage: number;
   }
-  
-  export async function executeTraderJoeSwap(params: SwapParams) {
-      if (typeof window === 'undefined' || !window.ethereum) {
-          throw new Error('Please install MetaMask to use this feature');
-      }
-  
-      try {
-          // Get connected account
-          const accounts = await window.ethereum.request({ 
-              method: 'eth_requestAccounts' 
-          }) as `0x${string}`[];
-          
-          if (!accounts[0]) {
-              throw new Error('No wallet connected');
-          }
-  
-          // Create Viem clients
-          const publicClient = createPublicClient({
-              chain: avalanche,
-              transport: http()
-          });
-  
-          const walletClient = createWalletClient({
-              chain: avalanche,
-              transport: http(),
-              account: accounts[0]
-          });
-  
-          // Get input/output tokens
-          const inputToken = TOKENS[params.tokenIn];
-          const outputToken = TOKENS[params.tokenOut];
-          
-          if (!inputToken || !outputToken) {
-              throw new Error('Invalid token symbol');
-          }
-  
-          // Parse amount with proper decimals
-          const parsedAmount = parseUnits(params.amount, inputToken.decimals);
-          const tokenAmount = new TokenAmount(inputToken, parsedAmount);
-  
-          // Generate all possible routes
-          const allTokenPairs = PairV2.createAllTokenPairs(
-              inputToken,
-              outputToken,
-              BASES
-          );
-          const allPairs = PairV2.initPairs(allTokenPairs);
-          const allRoutes = RouteV2.createAllRoutes(allPairs, inputToken, outputToken);
-  
-          // Get best trade
-          const isNativeIn = params.tokenIn === 'AVAX';
-          const isNativeOut = params.tokenOut === 'AVAX';
-  
-          const allTrades = await TradeV2.getTradesExactIn(
-              allRoutes,
-              tokenAmount,
-              outputToken,
-              isNativeIn,
-              isNativeOut,
-              publicClient,
-              CHAIN_ID
-          );
-  
-          // Filter out undefined trades and assert type
-          const validTrades = allTrades.filter((trade): trade is TradeV2 => trade !== undefined);
-          
-          if (validTrades.length === 0) {
-              throw new Error('No valid trades found');
-          }
-  
-          const bestTrade = TradeV2.chooseBestTrade(validTrades, true);
-          
-          if (!bestTrade) {
-              throw new Error('Could not find best trade path');
-          }
-  
-          // Set up swap options
-          const slippageTolerance = new Percent(
-              (params.slippage * 100).toString(),
-              "10000"
-          );
-  
-          const swapOptions: TradeOptions = {
-              allowedSlippage: slippageTolerance,
-              ttl: 3600, // 1 hour
-              recipient: accounts[0],
-              feeOnTransfer: false
-          };
-  
-          // Get swap parameters
-          const { methodName, args, value } = bestTrade.swapCallParameters(swapOptions);
-  
-          // Execute the swap
-          const { request } = await publicClient.simulateContract({
-              address: router,
-              abi: jsonAbis.LBRouterV22ABI,
-              functionName: methodName,
-              args: args,
-              account: accounts[0],
-              value: BigInt(value)
-          });
-  
-          const hash = await walletClient.writeContract(request);
-          
-          return {
-              txHash: hash,
-              status: 'submitted',
-              estimatedOutput: bestTrade.outputAmount.toSignificant(6),
-              executionPrice: bestTrade.executionPrice.toSignificant(6),
-              route: bestTrade.route.path.map(token => token.symbol).join(' -> ')
-          };
-  
-      } catch (error: unknown) {
-          if (error instanceof Error) {
-              throw new Error(`Failed to execute TraderJoe swap: ${error.message}`);
-          }
-          throw new Error('Failed to execute TraderJoe swap: Unknown error');
-      }
-  }
 
-  // Add this at the end of trader_joe.ts
-  export async function handleSwapCommand(userMessage: string) {
+  interface TradeQuote {
+    trade: TradeV2;  // From TraderJoe SDK
+    estimatedOutput: string;
+    executionPrice: string;
+    route: string;
+    inputAmount: string;
+    inputToken: string;
+    outputToken: string;
+    slippage: number;
+  }
+  
+ // In trader_joe.ts
+ // First, let's separate the quote logic from the execution
+ async function getTradeQuote(params: SwapParams): Promise<TradeQuote>{
+    if (typeof window === 'undefined' || !window.ethereum) {
+        throw new Error('Please install MetaMask to use this feature');
+    }
+
     try {
-        // Call your backend API
+        // Create public client
+        const publicClient = createPublicClient({
+            chain: avalanche,
+            transport: http()
+        });
+
+        // Get input/output tokens
+        const inputToken = TOKENS[params.tokenIn];
+        const outputToken = TOKENS[params.tokenOut];
+        
+        if (!inputToken || !outputToken) {
+            throw new Error('Invalid token symbol');
+        }
+
+        // Parse amount with proper decimals
+        const parsedAmount = parseUnits(params.amount, inputToken.decimals);
+        const tokenAmount = new TokenAmount(inputToken, parsedAmount);
+
+        // Generate all possible routes
+        const allTokenPairs = PairV2.createAllTokenPairs(
+            inputToken,
+            outputToken,
+            BASES
+        );
+        const allPairs = PairV2.initPairs(allTokenPairs);
+        const allRoutes = RouteV2.createAllRoutes(allPairs, inputToken, outputToken);
+
+        // Get best trade
+        const isNativeIn = params.tokenIn === 'AVAX';
+        const isNativeOut = params.tokenOut === 'AVAX';
+
+        const allTrades = await TradeV2.getTradesExactIn(
+            allRoutes,
+            tokenAmount,
+            outputToken,
+            isNativeIn,
+            isNativeOut,
+            publicClient,
+            CHAIN_ID
+        );
+
+        // Filter out undefined trades and assert type
+        const validTrades = allTrades.filter((trade): trade is TradeV2 => trade !== undefined);
+        
+        if (validTrades.length === 0) {
+            throw new Error('No valid trades found');
+        }
+
+        const bestTrade = TradeV2.chooseBestTrade(validTrades, true);
+        
+        if (!bestTrade) {
+            throw new Error('Could not find best trade path');
+        }
+
+        return {
+            trade: bestTrade,
+            estimatedOutput: bestTrade.outputAmount.toSignificant(6),
+            executionPrice: bestTrade.executionPrice.toSignificant(6),
+            route: bestTrade.route.path.map(token => token.symbol).join(' -> '),
+            inputAmount: params.amount,
+            inputToken: params.tokenIn,
+            outputToken: params.tokenOut,
+            slippage: params.slippage
+        };
+
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            throw new Error(`Failed to get trade quote: ${error.message}`);
+        }
+        throw new Error('Failed to get trade quote: Unknown error');
+    }
+}
+
+// Then modify handleSwapCommand to only get the quote
+export async function handleSwapCommand(userMessage: string) {
+    try {
         const response = await fetch('http://localhost:3001/api/chat', {
             method: 'POST',
             headers: {
@@ -219,22 +191,82 @@ import {
         }
 
         const data = await response.json();
-        
-        // Extract swap parameters from the AI response
         const swapParams = data.reply;
         
-        // Execute the swap with the parameters
-        return await executeTraderJoeSwap({
-            tokenIn: swapParams.tokenIn,
-            tokenOut: swapParams.tokenOut,
-            amount: swapParams.amount,
-            slippage: swapParams.slippage
-        });
+        // Just return the quote instead of executing
+        return await getTradeQuote(swapParams);
 
     } catch (error) {
         if (error instanceof Error) {
             throw new Error(`Swap command failed: ${error.message}`);
         }
         throw new Error('Swap command failed: Unknown error');
+    }
+}
+
+// Add a new function to execute the trade after user confirmation
+export async function executeQuotedTrade(quoteInfo: TradeQuote) {
+    if (typeof window === 'undefined' || !window.ethereum) {
+        throw new Error('Please install MetaMask to use this feature');
+    }
+
+    try {
+        const accounts = await window.ethereum.request({ 
+            method: 'eth_requestAccounts' 
+        }) as `0x${string}`[];
+        
+        if (!accounts[0]) {
+            throw new Error('No wallet connected');
+        }
+
+        const publicClient = createPublicClient({
+            chain: avalanche,
+            transport: http()
+        });
+
+        const walletClient = createWalletClient({
+            chain: avalanche,
+            transport: http(),
+            account: accounts[0]
+        });
+
+        const slippageTolerance = new Percent(
+            (quoteInfo.slippage * 100).toString(),
+            "10000"
+        );
+
+        const swapOptions: TradeOptions = {
+            allowedSlippage: slippageTolerance,
+            ttl: 3600,
+            recipient: accounts[0],
+            feeOnTransfer: false
+        };
+
+        const { methodName, args, value } = quoteInfo.trade.swapCallParameters(swapOptions);
+
+        const { request } = await publicClient.simulateContract({
+            address: router,
+            abi: jsonAbis.LBRouterV22ABI,
+            functionName: methodName,
+            args: args,
+            account: accounts[0],
+            value: BigInt(value)
+        });
+
+        const hash = await walletClient.writeContract(request);
+        
+        return {
+            txHash: hash,
+            status: 'submitted',
+            estimatedOutput: quoteInfo.estimatedOutput,
+            executionPrice: quoteInfo.executionPrice,
+            route: quoteInfo.route
+        };
+
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            throw new Error(`Failed to execute trade: ${error.message}`);
+        }
+        throw new Error('Failed to execute trade: Unknown error');
     }
 }

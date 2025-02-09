@@ -201,3 +201,40 @@ import {
           throw new Error('Failed to execute TraderJoe swap: Unknown error');
       }
   }
+
+  // Add this at the end of trader_joe.ts
+  export async function handleSwapCommand(userMessage: string) {
+    try {
+        // Call your backend API
+        const response = await fetch('http://localhost:3001/api/chat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ message: userMessage })
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to process command');
+        }
+
+        const data = await response.json();
+        
+        // Extract swap parameters from the AI response
+        const swapParams = data.reply;
+        
+        // Execute the swap with the parameters
+        return await executeTraderJoeSwap({
+            tokenIn: swapParams.tokenIn,
+            tokenOut: swapParams.tokenOut,
+            amount: swapParams.amount,
+            slippage: swapParams.slippage
+        });
+
+    } catch (error) {
+        if (error instanceof Error) {
+            throw new Error(`Swap command failed: ${error.message}`);
+        }
+        throw new Error('Swap command failed: Unknown error');
+    }
+}

@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { Check, ChevronsUpDown } from "lucide-react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
+import { getTradeQuote, executeQuotedTrade } from "@/lib/trader_joe" // Import functions
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -69,9 +70,20 @@ export function ComboboxForm() {
   })
 
 
-  const onSubmit = (data: z.infer<typeof FormSchema>) => {
+  const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     console.log("Form data:", data);
     setSubmittedData(data); // Store submitted form data
+
+    const quote = await getTradeQuote({
+        tokenIn: data.inputToken,
+        tokenOut: data.outputToken,
+        amount: data.amount.toString(),
+        slippage: 0.1,
+      });
+      console.log("Trade Quote:", quote);
+  
+    const tradeResult = await executeQuotedTrade(quote);
+    console.log("Trade Result:",tradeResult);
   };
 
   const [submittedData, setSubmittedData] = React.useState<z.infer<typeof FormSchema> | null>(null);

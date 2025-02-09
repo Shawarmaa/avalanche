@@ -124,7 +124,7 @@ export function ComboboxForm() {
   const [outputOpen, setOutputOpen] = React.useState(false)
 
   return (
-    <div>
+    <div className="flex flex-col ">
 
         {submittedData && (
         <div className="m-6 w-full">

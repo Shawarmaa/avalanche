@@ -12,7 +12,6 @@ import {
   Legend,
   ChartData,
 } from "chart.js";
-import zoomPlugin from "chartjs-plugin-zoom";
 
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
@@ -144,25 +143,30 @@ const Chart: React.FC<ChartProps> = ({ inputToken, targetToken, amount }) => {
   };
 
   return (
-    <div>
-      <h2 className="text-xl font-semibold">{`${inputToken.toUpperCase()} vs ${targetToken.toUpperCase()} Price Chart`}</h2>
-      {loading ? (
-        <p>Loading data...</p>
-      ) : chartData ? (
+    <div style={{ maxHeight: "600px", overflowY: "scroll" }}>
+    <h2 className="text-xl font-semibold">
+      {`${inputToken.toUpperCase()} vs ${targetToken.toUpperCase()} Price Chart`}
+    </h2>
+    {loading ? (
+      <p>Loading data...</p>
+    ) : chartData ? (
+      <div style={{ height: "350px", width: "100%" }}>
         <Line
           data={chartData}
           options={{
             responsive: true,
+            maintainAspectRatio: false,
             plugins: {
               legend: { position: "top" },
               title: { display: true, text: "30-Day Price Trend" },
             },
           }}
         />
-      ) : (
-        <p>No data available.</p>
-      )}
-    </div>
+      </div>
+    ) : (
+      <p>No data available.</p>
+    )}
+  </div>
   );
 };
 

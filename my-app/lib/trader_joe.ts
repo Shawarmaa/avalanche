@@ -87,7 +87,7 @@ import {
     trade: TradeV2;  // From TraderJoe SDK
     estimatedOutput: string;
     executionPrice: string;
-    route: string;
+    route: string[];
     inputAmount: string;
     inputToken: string;
     outputToken: string;
@@ -160,7 +160,7 @@ import {
             trade: bestTrade,
             estimatedOutput: bestTrade.outputAmount.toSignificant(6),
             executionPrice: bestTrade.executionPrice.toSignificant(6),
-            route: bestTrade.route.path.map(token => token.symbol).join(' -> '),
+            route: bestTrade.route.path.map(token => token.symbol).filter((symbol): symbol is string => symbol !== undefined), // Include full route
             inputAmount: params.amount,
             inputToken: params.tokenIn,
             outputToken: params.tokenOut,

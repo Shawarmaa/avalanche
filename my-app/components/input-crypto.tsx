@@ -94,6 +94,9 @@ export function ComboboxForm({ aiResponse }: ComboboxFormProps) {
         amount: data.amount.toString(),
         slippage: 0.1,
       });
+      const route = quote.route;
+      setTradeRoute(route)
+      console.log("Trade Route:", route);
       console.log("Trade Quote:", quote);
   
     const tradeResult = await executeQuotedTrade(quote);
@@ -103,6 +106,7 @@ export function ComboboxForm({ aiResponse }: ComboboxFormProps) {
   const [submittedData, setSubmittedData] = React.useState<z.infer<typeof FormSchema> | null>(null);
   const [inputOpen, setInputOpen] = React.useState(false)
   const [outputOpen, setOutputOpen] = React.useState(false)
+  const [tradeRoute, setTradeRoute] = React.useState<string[] | null>(null);
 
   return (
     <div className="flex flex-col ">
@@ -276,6 +280,22 @@ export function ComboboxForm({ aiResponse }: ComboboxFormProps) {
             <Button type="submit" className="w-full">Submit</Button>
         </form>
         </Form>
+
+        {tradeRoute && (
+        <div className="mt-6 rounded-md border border-border bg-background p-4 shadow-sm">
+            <h3 className="text-base font-medium text-foreground mb-3">Best Trade Route</h3>
+            <div className="flex items-center space-x-1">
+            {tradeRoute.map((token, index) => (
+                <React.Fragment key={index}>
+                <span className="rounded-md border border-border bg-muted px-2 py-1 text-sm text-foreground">
+                    {token}
+                </span>
+                {index < tradeRoute.length - 1 && <span className="text-muted-foreground">→</span>}
+                </React.Fragment>
+            ))}
+            </div>
+        </div>
+        )}
 
     
 

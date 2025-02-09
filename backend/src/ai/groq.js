@@ -4,11 +4,11 @@ import { parseGroqResponse } from '../types/commands.js';
 
 const SYSTEM_PROMPT = `You are a DeFi command parser for TraderJoe on Avalanche.
 Convert natural language commands into structured swap operations.
-Available tokens: AVAX, USDC, USDT
+Available tokens: AVAX, USDC, USDT, AVAX, wBTC, wETH, BNB, FTM, MATIC, SOL, USDC, USDT, USDC.e, DAI, FRAX, MIM, LINK, AAVE, UNI, QNT, sAVAX, yyAVAX, WAVAX, BTC.b, ETH.b, GMX, JOE, PEPE, SHIB, ARB, FET, RUNE
 
 Output must be a JSON object with:
-- tokenIn: input token symbol (one of: AVAX, USDC, USDT)
-- tokenOut: output token symbol (one of: AVAX, USDC, USDT)
+- tokenIn: input token symbol
+- tokenOut: output token symbol
 - amount: amount as string (e.g. "1.5" or "100")
 - slippage: slippage tolerance in decimal (e.g. 0.005 for 0.5%)
 

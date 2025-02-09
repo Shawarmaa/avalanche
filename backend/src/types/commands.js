@@ -6,8 +6,8 @@ export const TOKENS = {
     AVAX: 'AVAX',
     wBTC: 'wBTC',
     wETH: 'wETH',
-    BNB: 'BNB',
-    FTM: 'FTM',
+    // BNB: 'BNB',
+    // FTM: 'FTM',
     MATIC: 'MATIC',  // Polygon's token
     SOL: 'SOL',
     
@@ -15,31 +15,31 @@ export const TOKENS = {
     USDC: 'USDC',
     USDT: 'USDT',
     USDC_e: 'USDC.e',
-    DAI: 'DAI',
+    // DAI: 'DAI',
     FRAX: 'FRAX',
-    MIM: 'MIM',
+    // MIM: 'MIM',
 
     // DeFi Blue Chips
-    LINK: 'LINK',
-    AAVE: 'AAVE',
-    UNI: 'UNI',
-    QNT: 'QNT',
+    // LINK: 'LINK',
+    // AAVE: 'AAVE',
+    // UNI: 'UNI',
+    // QNT: 'QNT',
     
     // Liquid Staking & Wrapped
     sAVAX: 'sAVAX',
     yyAVAX: 'yyAVAX',
     WAVAX: 'WAVAX',
     BTC_b: 'BTC.b',
-    ETH_b: 'ETH.b',
+    // ETH_b: 'ETH.b',
 
     // Additional Tokens
     GMX: 'GMX',
     JOE: 'JOE',
-    PEPE: 'PEPE',
-    SHIB: 'SHIB',
-    ARB: 'ARB',    // Arbitrum
-    FET: 'FET',    // Fetch.ai
-    RUNE: 'RUNE'   // THORChain
+    // PEPE: 'PEPE',
+    // SHIB: 'SHIB',
+    // ARB: 'ARB',    // Arbitrum
+    // FET: 'FET',    // Fetch.ai
+    // RUNE: 'RUNE'   // THORChain
 };
 
 // Command type definition for swaps

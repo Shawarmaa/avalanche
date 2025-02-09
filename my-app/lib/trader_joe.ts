@@ -25,8 +25,8 @@ import {
       WAVAX: WNATIVE[CHAIN_ID],
       wBTC: new Token(CHAIN_ID, "0x50b7545627a5162F82A992c33b87aDc75187B218", 8, "wBTC", "Wrapped Bitcoin"),
       wETH: new Token(CHAIN_ID, "0x49D5c2BdFfac6CE2BFdB6640F4F80f226bc10bAB", 18, "wETH", "Wrapped Ether"),
-      BNB: new Token(CHAIN_ID, "0x264c1383EA520f73dd837F915ef3a732e204a493", 18, "BNB", "Binance Coin"),
-      FTM: new Token(CHAIN_ID, "0xc5e2b037d30a390e62180970b3aa4e91868764cd", 18, "FTM", "Fantom"),
+      //BNB: new Token(CHAIN_ID, "0x264c1383EA520f73dd837F915ef3a732e204a493", 18, "BNB", "Binance Coin"),
+      //FTM: new Token(CHAIN_ID, "0xc5e2b037d30a390e62180970b3aa4e91868764cd", 18, "FTM", "Fantom"),
       MATIC: new Token(CHAIN_ID, "0x885ca6663E1E19DAD31c1e08D9958a2b8F538D53", 18, "MATIC", "Polygon"),
       SOL: new Token(CHAIN_ID, "0xFE6B19286885a4F7F55AdAD09C3Cd1f906D2478F", 18, "SOL", "Solana"),
   
@@ -34,30 +34,30 @@ import {
       USDC: new Token(CHAIN_ID, "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E", 6, "USDC", "USD Coin"),
       USDT: new Token(CHAIN_ID, "0x9702230A8Ea53601f5cD2dc00fDBc13d4dF4A8c7", 6, "USDT", "Tether USD"),
       'USDC.e': new Token(CHAIN_ID, "0xA7D7079b0FEaD91F3e65f86E8915Cb59c1a4C664", 6, "USDC.e", "USD Coin.e"),
-      DAI: new Token(CHAIN_ID, "0xd586E7F844cEa2F87f50152665BCbc2C279D8d70", 18, "DAI", "Dai Stablecoin"),
+      //DAI: new Token(CHAIN_ID, "0xd586E7F844cEa2F87f50152665BCbc2C279D8d70", 18, "DAI", "Dai Stablecoin"),
       FRAX: new Token(CHAIN_ID, "0xD24C2Ad096400B6FBcd2ad8B24E7acBc21A1da64", 18, "FRAX", "Frax"),
-      MIM: new Token(CHAIN_ID, "0x130966628846BFd36ff31a822705796e8cb8C18D", 18, "MIM", "Magic Internet Money"),
+      //MIM: new Token(CHAIN_ID, "0x130966628846BFd36ff31a822705796e8cb8C18D", 18, "MIM", "Magic Internet Money"),
   
       // DeFi Blue Chips
-      LINK: new Token(CHAIN_ID, "0x5947BB275c521040051D82396192181b413227A3", 18, "LINK", "ChainLink Token"),
-      AAVE: new Token(CHAIN_ID, "0x63a72806098Bd3D9520cC43356dD78afe5D386D9", 18, "AAVE", "Aave Token"),
-      UNI: new Token(CHAIN_ID, "0x8eBAf22B6F053dFFeaf46f4Dd9eFA95D89ba8580", 18, "UNI", "Uniswap"),
-      QNT: new Token(CHAIN_ID, "0x4e5A8E6F594d18AD31e68644B38e685F9E49A9dB", 18, "QNT", "Quant"),
+      //LINK: new Token(CHAIN_ID, "0x5947BB275c521040051D82396192181b413227A3", 18, "LINK", "ChainLink Token"),
+      //AAVE: new Token(CHAIN_ID, "0x63a72806098Bd3D9520cC43356dD78afe5D386D9", 18, "AAVE", "Aave Token"),
+      //UNI: new Token(CHAIN_ID, "0x8eBAf22B6F053dFFeaf46f4Dd9eFA95D89ba8580", 18, "UNI", "Uniswap"),
+      //QNT: new Token(CHAIN_ID, "0x4e5A8E6F594d18AD31e68644B38e685F9E49A9dB", 18, "QNT", "Quant"),
   
       // Liquid Staking & Wrapped
       sAVAX: new Token(CHAIN_ID, "0x2b2C81e08f1Af8835a78Bb2A90AE924ACE0eA4bE", 18, "sAVAX", "Staked AVAX"),
       yyAVAX: new Token(CHAIN_ID, "0x59414b3089ce2AF0010e7523Dea7E2b35d776ec7", 18, "yyAVAX", "Yield Yak AVAX"),
       'BTC.b': new Token(CHAIN_ID, "0x152b9d0FdC40C096757F570A51E494bd4b943E50", 8, "BTC.b", "Bitcoin bridged"),
-      'ETH.b': new Token(CHAIN_ID, "0x49D5c2BdFfac6CE2BFdB6640F4F80f226bc10bAB", 18, "ETH.b", "Ethereum bridged"),
+      //'ETH.b': new Token(CHAIN_ID, "0x49D5c2BdFfac6CE2BFdB6640F4F80f226bc10bAB", 18, "ETH.b", "Ethereum bridged"),
   
       // Additional Tokens
       GMX: new Token(CHAIN_ID, "0x62edc0692BD897D2295872a9FFCac5425011c661", 18, "GMX", "GMX"),
       JOE: new Token(CHAIN_ID, "0x6e84a6216eA6dACC71eE8E6b0a5B7322EEbC0fDd", 18, "JOE", "JoeToken"),
-      PEPE: new Token(CHAIN_ID, "0x669c00Dc04acc3722C349b1c5B4c3BB4e652c986", 18, "PEPE", "Pepe"),
-      SHIB: new Token(CHAIN_ID, "0x02D980A0D7AF3fb7Cf7Df8cB35d9eDBCF355f665", 18, "SHIB", "Shiba Inu"),
-      ARB: new Token(CHAIN_ID, "0xB628D41428Cb15F6e752Bb70BBaD45D9cAB92910", 18, "ARB", "Arbitrum"),
-      FET: new Token(CHAIN_ID, "0x6C7f93C68D92Ac6490A2C2D8F88Eb75ab86D6b0F", 18, "FET", "Fetch.ai"),
-      RUNE: new Token(CHAIN_ID, "0x8626f88A6D7000e8Df236cF84DE7B3A74d42D639", 18, "RUNE", "THORChain")
+      //PEPE: new Token(CHAIN_ID, "0x669c00Dc04acc3722C349b1c5B4c3BB4e652c986", 18, "PEPE", "Pepe"),
+      //SHIB: new Token(CHAIN_ID, "0x02D980A0D7AF3fb7Cf7Df8cB35d9eDBCF355f665", 18, "SHIB", "Shiba Inu"),
+    //   ARB: new Token(CHAIN_ID, "0xB628D41428Cb15F6e752Bb70BBaD45D9cAB92910", 18, "ARB", "Arbitrum"),
+    //   FET: new Token(CHAIN_ID, "0x6C7f93C68D92Ac6490A2C2D8F88Eb75ab86D6b0F", 18, "FET", "Fetch.ai"),
+    //   RUNE: new Token(CHAIN_ID, "0x8626f88A6D7000e8Df236cF84DE7B3A74d42D639", 18, "RUNE", "THORChain")
   };
   
   // Base tokens used for routing (most liquid pairs)

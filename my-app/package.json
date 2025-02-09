@@ -39,6 +39,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@metamask/providers": "^20.0.0",
+    "@types/chart.js": "^2.9.41",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

@@ -35,31 +35,17 @@ const source = [
     { label: "AVAX", value: "AVAX" },
     { label: "wBTC", value: "wBTC" },
     { label: "wETH", value: "wETH" },
-    { label: "BNB", value: "BNB" },
-    { label: "FTM", value: "FTM" },
     { label: "MATIC", value: "MATIC" },
     { label: "SOL", value: "SOL" },
     { label: "USDC", value: "USDC" },
     { label: "USDT", value: "USDT" },
     { label: "USDC.e", value: "USDC.e" },
-    { label: "DAI", value: "DAI" },
     { label: "FRAX", value: "FRAX" },
-    { label: "MIM", value: "MIM" },
-    { label: "LINK", value: "LINK" },
-    { label: "AAVE", value: "AAVE" },
-    { label: "UNI", value: "UNI" },
-    { label: "QNT", value: "QNT" },
     { label: "sAVAX", value: "sAVAX" },
     { label: "yyAVAX", value: "yyAVAX" },
     { label: "BTC.b", value: "BTC.b" },
-    { label: "ETH.b", value: "ETH.b" },
     { label: "GMX", value: "GMX" },
-    { label: "JOE", value: "JOE" },
-    { label: "PEPE", value: "PEPE" },
-    { label: "SHIB", value: "SHIB" },
-    { label: "ARB", value: "ARB" },
-    { label: "FET", value: "FET" },
-    { label: "RUNE", value: "RUNE" }
+    { label: "JOE", value: "JOE" }
   ] as const;
 
 

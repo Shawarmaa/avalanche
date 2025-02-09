@@ -31,60 +31,6 @@ import {
 import Chart from "./chart"
 
 
-const tokens = [
-  { label: "FLR", value: "FLR" },
-  { label: "SGB", value: "SGB" },
-  { label: "BTC", value: "BTC" },
-  { label: "XRP", value: "XRP" },
-  { label: "LTC", value: "LTC" },
-  { label: "XLM", value: "XLM" },
-  { label: "DOGE", value: "DOGE" },
-  { label: "ADA", value: "ADA" },
-  { label: "ALGO", value: "ALGO" },
-  { label: "ETH", value: "ETH" },
-  { label: "FIL", value: "FIL" },
-  { label: "ARB", value: "ARB" },
-  { label: "AVAX", value: "AVAX" },
-  { label: "BNB", value: "BNB" },
-  { label: "POL", value: "POL" },
-  { label: "SOL", value: "SOL" },
-  { label: "USDC", value: "USDC" },
-  { label: "USDT", value: "USDT" },
-  { label: "XDC", value: "XDC" },
-  { label: "TRX", value: "TRX" },
-  { label: "LINK", value: "LINK" },
-  { label: "ATOM", value: "ATOM" },
-  { label: "DOT", value: "DOT" },
-  { label: "TON", value: "TON" },
-  { label: "ICP", value: "ICP" },
-  { label: "SHIB", value: "SHIB" },
-  { label: "DAI", value: "DAI" },
-  { label: "BCH", value: "BCH" },
-  { label: "NEAR", value: "NEAR" },
-  { label: "LEO", value: "LEO" },
-  { label: "UNI", value: "UNI" },
-  { label: "ETC", value: "ETC" },
-  { label: "WIF", value: "WIF" },
-  { label: "BONK", value: "BONK" },
-  { label: "JUP", value: "JUP" },
-  { label: "ETHFI", value: "ETHFI" },
-  { label: "ENA", value: "ENA" },
-  { label: "PYTH", value: "PYTH" },
-  { label: "HNT", value: "HNT" },
-  { label: "SUI", value: "SUI" },
-  { label: "PEPE", value: "PEPE" },
-  { label: "QNT", value: "QNT" },
-  { label: "AAVE", value: "AAVE" },
-  { label: "FTM", value: "FTM" },
-  { label: "ONDO", value: "ONDO" },
-  { label: "TAO", value: "TAO" },
-  { label: "FET", value: "FET" },
-  { label: "RENDER", value: "RENDER" },
-  { label: "NOT", value: "NOT" },
-  { label: "RUNE", value: "RUNE" },
-  { label: "TRUMP", value: "TRUMP" }
-] as const;
-
 const source = [
   { label: "FLR", value: "FLR" },
   { label: "SGB", value: "SGB" },
@@ -152,7 +98,6 @@ const source = [
 const FormSchema = z.object({
   inputToken: z.string({ required_error: "Please select an input token." }),
   outputToken: z.string({ required_error: "Please select an output token." }),
-  targetToken: z.string({ required_error: "Please select a target token." }),
   amount: z
     .number({ required_error: "Please enter an amount." })
     .positive("Amount must be greater than zero."),
@@ -177,18 +122,19 @@ export function ComboboxForm() {
   const [submittedData, setSubmittedData] = React.useState<z.infer<typeof FormSchema> | null>(null);
   const [inputOpen, setInputOpen] = React.useState(false)
   const [outputOpen, setOutputOpen] = React.useState(false)
-  const [token, setToken] = React.useState(false)
 
   return (
     <div>
 
         {submittedData && (
-                <Chart
-                inputToken={submittedData.targetToken}
-                targetToken={submittedData.outputToken}
-                amount={String(submittedData.amount)}
-                />
-            )}
+        <div className="m-6 w-full">
+            <Chart
+            inputToken={submittedData.inputToken}
+            targetToken={submittedData.outputToken}
+            amount={String(submittedData.amount)}
+            />
+        </div>
+        )}
 
         <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -197,7 +143,7 @@ export function ComboboxForm() {
             name="inputToken"
             render={({ field }) => (
                 <FormItem className="flex flex-col">
-                <FormLabel>Origin Chain</FormLabel>
+                <FormLabel>Source Token</FormLabel>
                 <Popover open={inputOpen} onOpenChange={setInputOpen}>
                     <PopoverTrigger asChild>
                     <FormControl>
@@ -218,7 +164,7 @@ export function ComboboxForm() {
                         </Button>
                     </FormControl>
                     </PopoverTrigger>
-                    <PopoverContent className=" p-0">
+                    <PopoverContent className=" p-0" >
                     <Command>
                         <CommandInput
                         placeholder="Search framework..."
@@ -261,7 +207,7 @@ export function ComboboxForm() {
             name="outputToken"
             render={({ field }) => (
                 <FormItem className="flex flex-col">
-                <FormLabel>Target Chain</FormLabel>
+                <FormLabel>Target Token</FormLabel>
                 <Popover open={outputOpen} onOpenChange={setOutputOpen}>
                     <PopoverTrigger asChild>
                     <FormControl>
@@ -305,70 +251,6 @@ export function ComboboxForm() {
                                 className={cn(
                                     "ml-auto",
                                     source.value === field.value
-                                    ? "opacity-100"
-                                    : "opacity-0"
-                                )}
-                                />
-                            </CommandItem>
-                            ))}
-                        </CommandGroup>
-                        </CommandList>
-                    </Command>
-                    </PopoverContent>
-                </Popover>
-                <FormMessage />
-                </FormItem>
-            )}
-            />
-            <FormField
-            control={form.control}
-            name="targetToken"
-            render={({ field }) => (
-                <FormItem className="flex flex-col">
-                <FormLabel>Token</FormLabel>
-                <Popover open={token} onOpenChange={setToken}>
-                    <PopoverTrigger asChild>
-                    <FormControl>
-                        <Button
-                        variant="outline"
-                        role="combobox"
-                        className={cn(
-                            " justify-between",
-                            !field.value && "text-muted-foreground"
-                        )}
-                        >
-                        {field.value
-                            ? tokens.find(
-                                (token) => token.value === field.value
-                            )?.label
-                            : "Select token"}
-                        <ChevronsUpDown className="opacity-50" />
-                        </Button>
-                    </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className=" p-0">
-                    <Command>
-                        <CommandInput
-                        placeholder="Search framework..."
-                        className="h-9"
-                        />
-                        <CommandList>
-                        <CommandEmpty>No framework found.</CommandEmpty>
-                        <CommandGroup>
-                            {tokens.map((token) => (
-                            <CommandItem
-                                value={token.label}
-                                key={token.value}
-                                onSelect={() => {
-                                form.setValue("targetToken", token.value)
-                                setToken(false)
-                                }}
-                            >
-                                {token.label}
-                                <Check
-                                className={cn(
-                                    "ml-auto",
-                                    token.value === field.value
                                     ? "opacity-100"
                                     : "opacity-0"
                                 )}

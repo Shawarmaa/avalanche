@@ -52,33 +52,24 @@ const Chart: React.FC<ChartProps> = ({ inputToken, targetToken, amount }) => {
   const fetchChartData = async (inputToken: string, targetToken: string, amount: string) => {
     const inputId = tokenIdMapping[inputToken.toUpperCase()] || inputToken;
     const targetId = tokenIdMapping[targetToken.toUpperCase()] || targetToken;
-    console.log(inputId)
-    console.log(targetId)
-
+  
     setLoading(true);
     try {
-        
-    const [inputResponse, targetResponse] = await Promise.all([
+      const [inputResponse, targetResponse] = await Promise.all([
         axios.get(`https://api.coingecko.com/api/v3/coins/${inputId}/market_chart`, {
-            params: {
-            vs_currency: "usd",  // Change this to the desired currency
-            days: 30,
-            },
+          params: { vs_currency: "usd", days: 30 },
         }),
         axios.get(`https://api.coingecko.com/api/v3/coins/${targetId}/market_chart`, {
-            params: {
-            vs_currency: "usd",
-            days: 30,
-            },
+          params: { vs_currency: "usd", days: 30 },
         }),
-        ]);
-
+      ]);
+  
       const inputPrices = inputResponse.data.prices.map((item: [number, number]) => item[1]);
       const targetPrices = targetResponse.data.prices.map((item: [number, number]) => item[1]);
       const labels = inputResponse.data.prices.map((item: [number, number]) =>
         new Date(item[0]).toLocaleDateString()
       );
-
+  
       setChartData({
         labels,
         datasets: [
@@ -100,6 +91,7 @@ const Chart: React.FC<ChartProps> = ({ inputToken, targetToken, amount }) => {
       });
     } catch (error) {
       console.error("Failed to fetch chart data:", error);
+      setChartData(null);  // Clear data on error
     } finally {
       setLoading(false);
     }
@@ -107,29 +99,29 @@ const Chart: React.FC<ChartProps> = ({ inputToken, targetToken, amount }) => {
 
   return (
     <div style={{ maxHeight: "600px", overflowY: "scroll" }}>
-    <h2 className="text-xl font-semibold">
-      {`${inputToken.toUpperCase()} vs ${targetToken.toUpperCase()} Price Chart`}
-    </h2>
-    {loading ? (
-      <p>Loading data...</p>
-    ) : chartData ? (
-      <div style={{ height: "350px", width: "100%" }}>
-        <Line
-          data={chartData}
-          options={{
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-              legend: { position: "top" },
-              title: { display: true, text: "30-Day Price Trend" },
-            },
-          }}
-        />
-      </div>
-    ) : (
-      <p>No data available.</p>
-    )}
-  </div>
+      <h2 className="text-xl font-semibold">
+        {`${inputToken.toUpperCase()} vs ${targetToken.toUpperCase()} Price Chart`}
+      </h2>
+      {loading ? (
+        <p>Loading data...</p>
+      ) : chartData ? (
+        <div style={{ height: "350px", width: "100%" }}>
+          <Line
+            data={chartData}
+            options={{
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: { position: "top" },
+                title: { display: true, text: "30-Day Price Trend" },
+              },
+            }}
+          />
+        </div>
+      ) : (
+        <p>No data available due to an error. Please try again later.</p>
+      )}
+    </div>
   );
 };
 

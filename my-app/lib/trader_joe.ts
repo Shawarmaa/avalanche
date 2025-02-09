@@ -96,7 +96,7 @@ import {
   
  // In trader_joe.ts
  // First, let's separate the quote logic from the execution
- async function getTradeQuote(params: SwapParams): Promise<TradeQuote>{
+ export async function getTradeQuote(params: SwapParams): Promise<TradeQuote>{
     if (typeof window === 'undefined' || !window.ethereum) {
         throw new Error('Please install MetaMask to use this feature');
     }

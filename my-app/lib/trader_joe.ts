@@ -175,34 +175,6 @@ import {
     }
 }
 
-// Then modify handleSwapCommand to only get the quote
-export async function handleSwapCommand(userMessage: string) {
-    try {
-        const response = await fetch('http://localhost:3001/api/chat', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ message: userMessage })
-        });
-
-        if (!response.ok) {
-            throw new Error('Failed to process command');
-        }
-
-        const data = await response.json();
-        const swapParams = data.reply;
-        
-        // Just return the quote instead of executing
-        return await getTradeQuote(swapParams);
-
-    } catch (error) {
-        if (error instanceof Error) {
-            throw new Error(`Swap command failed: ${error.message}`);
-        }
-        throw new Error('Swap command failed: Unknown error');
-    }
-}
 
 // Add a new function to execute the trade after user confirmation
 export async function executeQuotedTrade(quoteInfo: TradeQuote) {

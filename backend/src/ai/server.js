@@ -25,7 +25,14 @@ app.post('/api/chat', async (req, res) => {
         const aiResponse = await processCommand(message); // Process with DeepSeek AI
         console.log('AI response:', aiResponse); // Log the AI response
 
-        res.json({ reply: aiResponse }); // Send structured response to frontend
+        res.json({ 
+            reply: {
+                tokenIn: aiResponse.tokenIn,
+                tokenOut: aiResponse.tokenOut,
+                amount: aiResponse.amount,
+                slippage: aiResponse.slippage
+            }
+        });
     } catch (error) {
         console.error('Error processing command:', error); // Log the error
         res.status(500).json({ error: 'Failed to process command', details: error.message });

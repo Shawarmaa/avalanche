@@ -1,3 +1,4 @@
+'use client'
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -6,17 +7,17 @@ import axios from "axios";
 
 
 type DeFiCommand = {
-  // action: string;
-  // token: string;
-  // amount: number;
-  // slippage?: number;
   tokenIn: string;
   tokenOut: string;
   amount: number;
   slippage?: number;
 };
 
-export function TextareaWithButton() {
+interface TextareaWithButtonProps {
+  onAiResponse: (response: DeFiCommand) => void;  // Callback to pass AI response
+}
+
+export function TextareaWithButton({ onAiResponse }: TextareaWithButtonProps) {
   const [message, setMessage] = useState(""); // Store input text
   const [response, setResponse] = useState<DeFiCommand | null>(null); // Store AI response
   const [error, setError] = useState<string | null>(null); // Store error message
@@ -28,6 +29,7 @@ export function TextareaWithButton() {
 
       const res = await axios.post("http://localhost:3001/api/chat", { message });
       setResponse(res.data.reply); // Set AI response
+      onAiResponse(res.data.reply);  // Pass the response up to the parent
     } catch (error) {
       console.error("Error sending message:", error);
       setError("Error processing request.");

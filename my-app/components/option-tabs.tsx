@@ -7,6 +7,18 @@ import { useState } from "react";
 
 export function OptionTab(){
     const [activeTab, setActiveTab] = useState("ai") // Active tab state
+    const [aiResponse, setAiResponse] = useState<{ inputToken: string; outputToken: string; amount: number } | null>(null);
+
+    // useEffect(() => {
+    //     if (aiResponse) {
+    //       setActiveTab("manual"); // Switch to the "manual" tab when there is an AI response
+    //     }
+    //   }, [aiResponse]);
+
+    const handleAiResponse = (response: { inputToken: string; outputToken: string; amount: number; slippage?: number }) => {
+        setAiResponse(response);  // Set AI response
+        setActiveTab("manual");   // Switch to manual tab
+    };
 
     return (
         <div>
@@ -17,10 +29,10 @@ export function OptionTab(){
                     <TabsTrigger value="manual">Manual</TabsTrigger>
                 </TabsList>
                 <TabsContent value="ai">
-                    <TextareaWithButton></TextareaWithButton>
+                    <TextareaWithButton onAiResponse={handleAiResponse} />
                 </TabsContent>
                 <TabsContent value="manual">
-                    <ComboboxForm></ComboboxForm>
+                    <ComboboxForm aiResponse={aiResponse} />
                 </TabsContent>
             </Tabs>
 

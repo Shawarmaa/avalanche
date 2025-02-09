@@ -1,5 +1,5 @@
 "use client"
-import React from "react"
+import React, { useEffect } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Check, ChevronsUpDown } from "lucide-react"
 import { useForm } from "react-hook-form"
@@ -59,16 +59,30 @@ const FormSchema = z.object({
     .positive("Amount must be greater than zero."),
 })
 
-   
+
+interface ComboboxFormProps {
+    aiResponse: { tokenIn: string; tokenOut: string; amount: number } | null;
+}
 
 
-export function ComboboxForm() {
-  const form = useForm<z.infer<typeof FormSchema>>({
+export function ComboboxForm({ aiResponse }: ComboboxFormProps) {
+    console.log("11111")
+    const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
-    defaultValues: {amount : 0}
+    defaultValues: { inputToken: "", outputToken: "", amount: 0 },
     
   })
 
+  useEffect(() => {
+    if (aiResponse) {
+        console.log(aiResponse)
+      form.reset({
+        inputToken: aiResponse.tokenIn, // Map tokenIn to inputToken
+        outputToken: aiResponse.tokenOut, // Map tokenOut
+        amount: Number(aiResponse.amount),
+      });
+    }
+  }, [aiResponse, form]);
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     console.log("Form data:", data);

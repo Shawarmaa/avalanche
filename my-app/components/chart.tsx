@@ -55,6 +55,9 @@ const Chart: React.FC<ChartProps> = ({ inputToken, targetToken, amount }) => {
   
     setLoading(true);
     try {
+      console.log("Fetching data for:");
+      console.log("Input ID:", inputId);
+      console.log("Target ID:", targetId);
       const [inputResponse, targetResponse] = await Promise.all([
         axios.get(`https://api.coingecko.com/api/v3/coins/${inputId}/market_chart`, {
           params: { vs_currency: "usd", days: 30 },
